@@ -1,0 +1,38 @@
+version: '3.5'
+
+networks:
+  api:
+    driver: bridge
+
+services:
+  api:
+    container_name: kalaxia_php_api
+    command: "php-fpm"
+    build: docker/phpfpm
+    working_dir: /srv/app
+    env_file:
+      - kalaxia.env
+    networks:
+      - api
+    volumes:
+      - '.:/srv/app'
+
+  nginx:
+    container_name: kalaxia_php_nginx
+    build: docker/nginx
+    env_file:
+      - kalaxia.env
+    networks:
+      - api
+    ports:
+      - '8080:80'
+
+  postgres:
+    container_name: kalaxia_php_postgresql
+    image: postgres:12
+    env_file:
+      - kalaxia.env
+    volumes:
+      - "./var/data:/var/lib/postgresql/data"
+    networks:
+      - api

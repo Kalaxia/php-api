@@ -24,8 +24,13 @@ services:
       - kalaxia.env
     networks:
       - api
+    extra_hosts:
+      - 'local.api.kalaxia.com:127.0.0.1'
     ports:
       - '8080:80'
+    volumes:
+      - '.:/srv/app'
+      - './var/log/nginx:/var/log/nginx'
 
   postgres:
     container_name: kalaxia_php_postgresql
